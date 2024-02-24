@@ -1,23 +1,36 @@
-import { useState } from "react";
-import UserContext from "./context";
-import Component1 from "./components/component1";
-import Component2 from "./components/component2";
+import { useEffect, useState } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css'
 
+import UserContext from "./context";
+import './App.css'
+import Stepper from "./components/Stepper/Stepper";
+import Form1 from "./components/Form1/Form1";
+import Form2 from "./components/Form2/Form2";
 
 export default function App() {
-  const [email, setEmail] = useState("email");
-  const [userName, setUserName] = useState("abcd");
-
-  return (<>
+  const [currentStep, setCurrentStep] = useState(1);
+  const [userData, setUserData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    confirmPassword: '',
+    password: ""
+  });
+  useEffect(() => {
+    console.log(userData, "user details");
+  }, [userData])
+  return (
     <UserContext.Provider value={{
-      email,
-      userName,
-      setEmail,
-      setUserName
+      currentStep,
+      setCurrentStep,
+      userData,
+      setUserData
     }}>
-      <Component1 />
-      <Component2 />
+      <div className="App">
+        <Stepper />
+        <Form1 />
+        <Form2 />
+      </div>
     </UserContext.Provider>
-  </>
   );
 }
