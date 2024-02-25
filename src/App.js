@@ -3,10 +3,11 @@ import useFetch from "./Hooks/useFetch";
 import { Button } from 'react-bootstrap';
 
 export default function App() {
-  const [data, isFetching, reload] = useFetch("https://jsonplaceholder.typicode.com/todos");
+  const [data, isFetching, paginate] = useFetch("https://jsonplaceholder.typicode.com/todos");
 
   return (
     <>
+      <h3>Items</h3>
       {isFetching ?
         <p>Fetching Data ...</p>
         :
@@ -14,9 +15,13 @@ export default function App() {
           data?.map((item) => {
             return <li key={item.id}>{item.title}</li>;
           })}
-          <Button onClick={reload}>Reload</Button>
         </ul>
       }
+      <div>
+        <Button className='me-1' onClick={() => paginate(1)}>1</Button>
+        <Button className='me-1' onClick={() => paginate(2)}>2</Button>
+        <Button onClick={() => paginate(3)} >3</Button>
+      </div>
     </>
   );
 }

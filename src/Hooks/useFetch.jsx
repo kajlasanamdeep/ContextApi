@@ -1,23 +1,29 @@
-import { useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 function useFetch(url) {
     const [data, setData] = useState(null);
     const [fetching, setFetching] = useState(false);
-    const [refresh, setRefresh] = useState(false);
+    const [pageNumber, setPageNumber] = useState(1);
 
-    useEffect(() => {
+    const fetchData = () => {
+        console.log(pageNumber, "pageNumber");
         setFetching(true)
         fetch(url)
             .then((res) => res.json())
-            .then((data) => setData(data)).finally(() => {
+            .then((data) => {
+                let pageData = data?.slice(((pageNumber - 1) * 10), (pageNumber * 10))
+                setData(pageData)
+            }).finally(() => {
                 setFetching(false)
             });
-    }, [url, refresh]);
-
-    const reload = () => {
-        setRefresh(prev => !prev)
     }
-    return [data, fetching, reload];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useMemo(() => fetchData(), [url, pageNumber]);
+
+    const paginate = (page) => {
+        setPageNumber(page)
+    }
+    return [data, fetching, paginate];
 }
 
 export default useFetch
