@@ -26,9 +26,7 @@ function Form2() {
                 ...prev,
                 ...values
             }))
-            alert(`Thanks For Form Submittion ${userData?.firstName}`)
-            // window.location.reload();
-            // setCurrentStep(3)
+            setCurrentStep(3)
         }
     });
 
