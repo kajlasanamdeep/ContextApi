@@ -1,36 +1,22 @@
-import { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'
-
-import UserContext from "./context";
-import './App.css'
-import Stepper from "./components/Stepper/Stepper";
-import Form1 from "./components/Form1/Form1";
-import Form2 from "./components/Form2/Form2";
+import useFetch from "./Hooks/useFetch";
+import { Button } from 'react-bootstrap';
 
 export default function App() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [userData, setUserData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    confirmPassword: '',
-    password: ""
-  });
-  useEffect(() => {
-    console.log(userData, "user details");
-  }, [userData])
+  const [data, isFetching, reload] = useFetch("https://jsonplaceholder.typicode.com/todos");
+
   return (
-    <UserContext.Provider value={{
-      currentStep,
-      setCurrentStep,
-      userData,
-      setUserData
-    }}>
-      <div className="App">
-        <Stepper />
-        <Form1 />
-        <Form2 />
-      </div>
-    </UserContext.Provider>
+    <>
+      {isFetching ?
+        <p>Fetching Data ...</p>
+        :
+        <ul>{
+          data?.map((item) => {
+            return <li key={item.id}>{item.title}</li>;
+          })}
+          <Button onClick={reload}>Reload</Button>
+        </ul>
+      }
+    </>
   );
 }
