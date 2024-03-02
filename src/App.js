@@ -1,36 +1,40 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'
-
-import UserContext from "./context";
-import './App.css'
-import Stepper from "./components/Stepper/Stepper";
-import Form1 from "./components/Form1/Form1";
-import Form2 from "./components/Form2/Form2";
-
+import { Button } from "react-bootstrap";
 export default function App() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [userData, setUserData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    confirmPassword: '',
-    password: ""
-  });
+  const [count, setCount] = useState(0);
+  const [inc, setInc] = useState(1);
+  const [dec, setDec] = useState(1);
+  const increment = useCallback(() => {
+    setCount(prev => (+prev) + (+inc))
+  }, [inc])
+  const decrement = useCallback(() => {
+    setCount(prev => prev - dec)
+  }, [dec])
   useEffect(() => {
-    console.log(userData, "user details");
-  }, [userData])
+    console.log("decrement");
+  }, [decrement])
+  useEffect(() => {
+    console.log("increment");
+  }, [increment])
   return (
-    <UserContext.Provider value={{
-      currentStep,
-      setCurrentStep,
-      userData,
-      setUserData
-    }}>
-      <div className="App">
-        <Stepper />
-        <Form1 />
-        <Form2 />
-      </div>
-    </UserContext.Provider>
-  );
+    <div className="d-flex">
+      <select className="me-1" value={inc} onChange={(e) => {
+        setInc(e.target.value)
+      }}>
+        <option value={1}>1</option>
+        <option value={2}>2</option>
+      </select>
+
+      <Button onClick={increment}>+</Button>
+      <span>{count}</span>
+      <Button variant="danger" onClick={decrement}>-</Button>
+      <select className="ms-1" value={inc} onChange={(e) => {
+        setDec(e.target.value)
+      }}>
+        <option value={1}>1</option>
+        <option value={2}>2</option>
+      </select>
+
+    </div>)
 }
