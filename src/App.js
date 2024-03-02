@@ -1,40 +1,35 @@
-import { useCallback, useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Button } from "react-bootstrap";
 export default function App() {
-  const [count, setCount] = useState(0);
-  const [inc, setInc] = useState(1);
-  const [dec, setDec] = useState(1);
-  const increment = useCallback(() => {
-    setCount(prev => (+prev) + (+inc))
-  }, [inc])
-  const decrement = useCallback(() => {
-    setCount(prev => prev - dec)
-  }, [dec])
-  useEffect(() => {
-    console.log("decrement");
-  }, [decrement])
-  useEffect(() => {
-    console.log("increment");
-  }, [increment])
+  const [imageSrc, setSrc] = useState(null);
+  const imageRef = useRef(null);
+  const changeImage = (e) => {
+    if (e?.target?.files[0]) {
+      const newSrc = URL.createObjectURL(e?.target?.files[0])
+      setSrc(newSrc)
+    }
+  }
+  const handleClickImage = () => {
+    if (imageRef.current) {
+      console.log(imageRef.current);
+      imageRef.current.click()
+    }
+  }
+  const removeImage = () => {
+    if (imageRef.current) {
+      console.log(imageRef.current);
+      imageRef.current.value = null
+      setSrc("")
+    }
+  }
   return (
-    <div className="d-flex">
-      <select className="me-1" value={inc} onChange={(e) => {
-        setInc(e.target.value)
-      }}>
-        <option value={1}>1</option>
-        <option value={2}>2</option>
-      </select>
-
-      <Button onClick={increment}>+</Button>
-      <span>{count}</span>
-      <Button variant="danger" onClick={decrement}>-</Button>
-      <select className="ms-1" value={inc} onChange={(e) => {
-        setDec(e.target.value)
-      }}>
-        <option value={1}>1</option>
-        <option value={2}>2</option>
-      </select>
-
-    </div>)
+    <>
+      <div className="d-flex mt-1">
+        <img src={imageSrc} alt="" onClick={handleClickImage} height={300} width={300}>
+        </img>
+        <input type="file" ref={imageRef} accept="image/*" onChange={changeImage} hidden></input>
+      </div>
+      <Button variant="danger" className="mt-1" onClick={removeImage}>clear</Button>
+    </>)
 }
